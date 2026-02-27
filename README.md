@@ -162,7 +162,7 @@ make -f GNUmakefile
 
 - **Foundation** - Core Objective-C runtime
 - **SQLite3** - Database storage
-- **SmallStepLib** - Available at git@github.com:Xenolexia-Foundation/SmallStepLib.git
+- **[SmallStepLib](https://github.com/Xenolexia-Foundation/SmallStepLib)** - Abstracts the platform differences between AppKit, UIKit and GNUStep
 
 ## Architecture
 
@@ -171,7 +171,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture documentation.
 ## Comparison with Other Implementations
 
 This Objective-C implementation matches the functionality of:
-- **React Native** (`../xenolexia-react`) - Mobile app
+- **TypeScript** (`../xenolexia-typescript`) - Desktop and Mobile app
 - **C#/.NET** (`../xenolexia-csharp`) - Cross-platform desktop
 
 All three implementations share the same core models and service architecture, ensuring consistency across platforms.
