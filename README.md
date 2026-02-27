@@ -162,7 +162,7 @@ make -f GNUmakefile
 
 - **Foundation** - Core Objective-C runtime
 - **SQLite3** - Database storage
-- **CoreLocation** (iOS/macOS only) - Location services
+- **SmallStepLib** - Available at git@github.com:Xenolexia-Foundation/SmallStepLib.git
 
 ## Architecture
 
