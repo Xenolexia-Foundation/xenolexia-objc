@@ -178,7 +178,9 @@ All three implementations share the same core models and service architecture, e
 
 ## License
 
-See [LICENSE](LICENSE) file for details.
+Copyright (C) 2016-2026 Husain Alamri (H4n) and Xenolexia Foundation.
+
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See [LICENSE](LICENSE) for the full text.
 
 ## Contributing
 

@@ -1,4 +1,9 @@
 //
+//  Copyright (C) 2016-2026 Husain Alamri (H4n) and Xenolexia Foundation.
+//  Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE.
+//
+
+//
 //  XLStatisticsWindowController.h
 //  Xenolexia
 //
@@ -15,7 +20,9 @@
 @end
 
 /// Simple view that draws a 7-day bar chart (words revealed per day)
-@interface XLWordsRevealedChartView : NSView
+@interface XLWordsRevealedChartView : NSView {
+    NSArray *_wordsRevealedByDay;
+}
 @property (nonatomic, copy) NSArray *wordsRevealedByDay; // NSDictionary with @"dayLabel", @"wordsRevealed"
 @end
 

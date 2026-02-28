@@ -1,4 +1,9 @@
 //
+//  Copyright (C) 2016-2026 Husain Alamri (H4n) and Xenolexia Foundation.
+//  Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE.
+//
+
+//
 //  XLOnboardingWindowController.m
 //  Xenolexia
 //
@@ -218,8 +223,8 @@ enum {
         [_storageService savePreferences:prefs delegate:self];
         _didComplete = YES;
         [self.window close];
-        if (_delegate && [_delegate respondsToSelector:@selector(onboardingDidComplete)]) {
-            [_delegate onboardingDidComplete];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(onboardingDidComplete)]) {
+            [self.delegate onboardingDidComplete];
         }
         return;
     }
@@ -234,8 +239,8 @@ enum {
     [_storageService savePreferences:prefs delegate:self];
     _didComplete = YES;
     [self.window close];
-    if (_delegate && [_delegate respondsToSelector:@selector(onboardingDidComplete)]) {
-        [_delegate onboardingDidComplete];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onboardingDidComplete)]) {
+        [self.delegate onboardingDidComplete];
     }
 }
 
@@ -261,8 +266,8 @@ enum {
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    if (!_didComplete && _delegate && [_delegate respondsToSelector:@selector(onboardingDidComplete)]) {
-        [_delegate onboardingDidComplete];
+    if (!_didComplete && self.delegate && [self.delegate respondsToSelector:@selector(onboardingDidComplete)]) {
+        [self.delegate onboardingDidComplete];
     }
 }
 

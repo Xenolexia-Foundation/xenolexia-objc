@@ -1,4 +1,9 @@
 //
+//  Copyright (C) 2016-2026 Husain Alamri (H4n) and Xenolexia Foundation.
+//  Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE.
+//
+
+//
 //  XLVocabularyWindowController.m
 //  Xenolexia
 //
@@ -386,8 +391,8 @@
 - (void)exportAnki:(id)sender { [self performExportWithFormat:XLExportFormatAnki]; }
 
 - (IBAction)reviewDueButtonClicked:(id)sender {
-    if (_delegate && [_delegate respondsToSelector:@selector(vocabularyDidRequestReview)]) {
-        [_delegate vocabularyDidRequestReview];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(vocabularyDidRequestReview)]) {
+        [self.delegate vocabularyDidRequestReview];
     }
 }
 
@@ -414,11 +419,8 @@
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    if (_delegate && [_delegate respondsToSelector:@selector(vocabularyWindowDidClose)]) {
-        [_delegate vocabularyWindowDidClose];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(vocabularyWindowDidClose)]) {
+        [self.delegate vocabularyWindowDidClose];
     }
 }
-</think>
-Adding `#import <objc/runtime.h>` and fixing the edit sheet (avoid `beginSheet` completionHandler capturing; use associated objects or a modal).
-<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
-StrReplace
+@end

@@ -1,4 +1,9 @@
 //
+//  Copyright (C) 2016-2026 Husain Alamri (H4n) and Xenolexia Foundation.
+//  Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE.
+//
+
+//
 //  XLSettingsWindowController.m
 //  Xenolexia
 //
@@ -265,14 +270,14 @@
 
 - (IBAction)aboutButtonClicked:(id)sender {
     (void)sender;
-    if (_delegate && [_delegate respondsToSelector:@selector(libraryDidRequestAbout)]) {
-        [_delegate libraryDidRequestAbout];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(libraryDidRequestAbout)]) {
+        [self.delegate libraryDidRequestAbout];
     }
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    if (_delegate && [_delegate respondsToSelector:@selector(settingsWindowDidClose)]) {
-        [_delegate settingsWindowDidClose];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(settingsWindowDidClose)]) {
+        [self.delegate settingsWindowDidClose];
     }
 }
 

@@ -1,4 +1,9 @@
 //
+//  Copyright (C) 2016-2026 Husain Alamri (H4n) and Xenolexia Foundation.
+//  Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE.
+//
+
+//
 //  XLReviewWindowController.m
 //  Xenolexia
 //
@@ -248,8 +253,8 @@ static const NSInteger kReviewBatchSize = 20;
 - (void)gradeAlreadyKnew:(id)sender { [self gradeAndAdvance:5]; }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    if (_delegate && [_delegate respondsToSelector:@selector(reviewWindowDidClose)]) {
-        [_delegate reviewWindowDidClose];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(reviewWindowDidClose)]) {
+        [self.delegate reviewWindowDidClose];
     }
 }
 

@@ -1,4 +1,9 @@
 //
+//  Copyright (C) 2016-2026 Husain Alamri (H4n) and Xenolexia Foundation.
+//  Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See LICENSE.
+//
+
+//
 //  XLStatisticsWindowController.m
 //  Xenolexia
 //
@@ -13,9 +18,7 @@
 #define W 200
 static const NSInteger kChartLastDays = 7;
 
-@implementation XLWordsRevealedChartView {
-    NSArray *_wordsRevealedByDay;
-}
+@implementation XLWordsRevealedChartView
 
 - (NSArray *)wordsRevealedByDay {
     return _wordsRevealedByDay;
@@ -259,8 +262,8 @@ static const NSInteger kChartLastDays = 7;
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    if (_delegate && [_delegate respondsToSelector:@selector(statisticsWindowDidClose)]) {
-        [_delegate statisticsWindowDidClose];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(statisticsWindowDidClose)]) {
+        [self.delegate statisticsWindowDidClose];
     }
 }
 
