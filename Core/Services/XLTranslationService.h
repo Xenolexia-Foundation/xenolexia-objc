@@ -42,7 +42,11 @@ typedef NS_ENUM(NSInteger, XLTranslationBackend) {
 };
 
 /// Translation service implementation
-@interface XLTranslationService : NSObject <XLTranslationService>
+@interface XLTranslationService : NSObject <XLTranslationService> {
+@private
+    XLTranslationBackend _translationBackend;
+    NSString *_libretranslateBaseURL;
+}
 
 + (instancetype)sharedService;
 

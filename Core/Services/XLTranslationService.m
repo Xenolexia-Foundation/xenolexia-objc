@@ -13,6 +13,7 @@
 #import "../../TranslationService.h" // Legacy Microsoft
 
 @implementation XLTranslationService
+@synthesize translationBackend = _translationBackend, libretranslateBaseURL = _libretranslateBaseURL;
 
 + (instancetype)sharedService {
     static XLTranslationService *sharedService = nil;

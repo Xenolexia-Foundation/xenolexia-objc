@@ -13,6 +13,7 @@
 #import "XLTranslationEngine.h"
 #import "XLTranslationService.h"
 #import "XLStorageService.h"
+#import "XLStorageServiceBlockHelper.h"
 #import "XLExportService.h"
 #import "SSFileSystem.h"
 #import "../../DictionaryService.h"
@@ -31,6 +32,7 @@
 @end
 
 @implementation XLManager
+@synthesize bookParser = _bookParser, translationEngine = _translationEngine, translationService = _translationService, storageService = _storageService, exportService = _exportService, dictionaryService = _dictionaryService, downloadService = _downloadService;
 
 + (instancetype)sharedManager {
     static XLManager *sharedManager = nil;
@@ -233,7 +235,7 @@
     NSMutableString *result = [htmlString mutableCopy];
     for (NSString *key in dictionary) {
         [result replaceOccurrencesOfString:key
-                                 withString:dictionary[key]
+                                 withString:[dictionary objectForKey:key]
                                     options:0
                                       range:NSMakeRange(0, result.length)];
     }

@@ -12,12 +12,27 @@
 #import "../Models/Language.h"
 #import "../Models/Vocabulary.h"
 #import "SSFileSystem.h"
+#if !XENOLEXIA_SIMPLE_CSV_EXPORT
 #import "CHCSVParser.h"
+#endif
 
-@interface XLExportService () {
-    SSFileSystem *_fileSystem;
-}
+@interface XLExportService ()
 @end
+
+/* Simple CSV field escaping (used when XENOLEXIA_SIMPLE_CSV_EXPORT is set) */
+static NSString *escapeCSVField(NSString *s) {
+    if (!s) return @"";
+    if ([s rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@",\"\r\n"]].location == NSNotFound)
+        return s;
+    NSMutableString *out = [NSMutableString stringWithString:@"\""];
+    for (NSUInteger i = 0; i < [s length]; i++) {
+        unichar c = [s characterAtIndex:i];
+        if (c == '"') [out appendString:@"\"\""];
+        else [out appendFormat:@"%C", c];
+    }
+    [out appendString:@"\""];
+    return out;
+}
 
 @implementation XLExportService
 
@@ -68,6 +83,29 @@
 }
 
 - (NSString *)exportToCSV:(NSArray *)items {
+#if XENOLEXIA_SIMPLE_CSV_EXPORT
+    /* Simple CSV without CHCSVParser (e.g. Linux/GNUStep build) */
+    NSDateFormatter *dateFmt = [[NSDateFormatter alloc] init];
+    dateFmt.dateFormat = @"yyyy-MM-dd";
+    NSMutableString *csv = [NSMutableString string];
+    [csv appendString:@"source_word,target_word,source_language,target_language,context_sentence,book_title,status,review_count,ease_factor,interval,added_at\n"];
+    for (XLVocabularyItem *item in items) {
+        [csv appendFormat:@"%@,%@,%@,%@,%@,%@,%@,%ld,%.2f,%ld,%@\n",
+            escapeCSVField(item.sourceWord),
+            escapeCSVField(item.targetWord),
+            escapeCSVField([XLLanguageInfo codeStringForLanguage:item.sourceLanguage]),
+            escapeCSVField([XLLanguageInfo codeStringForLanguage:item.targetLanguage]),
+            escapeCSVField(item.contextSentence),
+            escapeCSVField(item.bookTitle),
+            escapeCSVField([XLVocabularyItem codeStringForStatus:item.status]),
+            (long)item.reviewCount,
+            item.easeFactor,
+            (long)item.interval,
+            item.addedAt ? [dateFmt stringFromDate:item.addedAt] : @""];
+    }
+    [dateFmt release];
+    return [csv copy];
+#else
     // Use CHCSVWriter (FOSS) for correct CSV escaping; write to memory then return string
     NSOutputStream *stream = [NSOutputStream outputStreamToMemory];
     CHCSVWriter *writer = [[CHCSVWriter alloc] initWithOutputStream:stream encoding:NSUTF8StringEncoding delimiter:(unichar)','];
@@ -100,6 +138,7 @@
         return nil;
     }
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+#endif
 }
 
 - (NSString *)exportToJSON:(NSArray<XLVocabularyItem *> *)items {

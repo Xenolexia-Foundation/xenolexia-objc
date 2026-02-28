@@ -12,9 +12,26 @@
 
 #import <Foundation/Foundation.h>
 
+// Forward declarations for implementation ivars (no libzip/libxml in header)
+struct zip;
+struct _xmlDoc;
+struct _xmlXPathContext;
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface XLEpubReader : NSObject
+@interface XLEpubReader : NSObject {
+@private
+    struct zip *_zip;
+    struct _xmlDoc *_opfDoc;
+    struct _xmlXPathContext *_opfXpath;
+    NSString *_rootPath;
+    NSString *_rootDir;
+    NSString *_title;
+    NSString *_identifier;
+    NSString *_language;
+    NSArray<NSString *> *_spinePaths;
+    NSArray<NSDictionary<NSString *, id> *> *_tocEntries;
+}
 
 /// Open EPUB at path. Returns nil on failure.
 + (nullable instancetype)openAtPath:(NSString *)path error:(NSError **)error;

@@ -99,7 +99,7 @@
         }
         
         if (completion) {
-            completion(parsedBook.chapters[chapterIndex], nil);
+            completion((XLChapter *)[parsedBook.chapters objectAtIndex:chapterIndex], nil);
         }
     }];
 }
@@ -168,7 +168,7 @@
     
     NSInteger wordCount = 0;
     for (NSInteger i = 0; i < paragraphs.count; i++) {
-        NSString *paragraph = paragraphs[i];
+        NSString *paragraph = (NSString *)[paragraphs objectAtIndex:i];
         if ([paragraph length] > 0) {
             XLChapter *chapter = [[XLChapter alloc] init];
             chapter.chapterId = [[NSUUID UUID] UUIDString];

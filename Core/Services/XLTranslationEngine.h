@@ -18,7 +18,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Translation options
-@interface XLTranslationOptions : NSObject
+@interface XLTranslationOptions : NSObject {
+@private
+    XLLanguagePair *_languagePair;
+    XLProficiencyLevel _proficiencyLevel;
+    double _wordDensity;
+    NSArray *_excludeWords;
+}
 
 @property (nonatomic) XLLanguagePair *languagePair;
 @property (nonatomic) XLProficiencyLevel proficiencyLevel;
@@ -32,7 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// Translation engine
-@interface XLTranslationEngine : NSObject
+@interface XLTranslationEngine : NSObject {
+@private
+    XLTranslationOptions *_options;
+    NSMutableDictionary<NSString *, XLWordEntry *> *_wordCache;
+}
 
 - (instancetype)initWithOptions:(XLTranslationOptions *)options;
 

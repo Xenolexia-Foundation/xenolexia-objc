@@ -9,6 +9,42 @@
 //
 
 #import "TranslationService.h"
+
+#if defined(__linux__) || (defined(GNUSTEP_BASE_LIBRARY) && !defined(__APPLE__))
+// Stub for Linux/GNUStep: no MS Translate or AVFoundation
+@implementation TranslationService
+
++ (id)sharedTranslator {
+    static TranslationService *sharedTranslator = nil;
+    if (sharedTranslator == nil) {
+        sharedTranslator = [[self alloc] init];
+    }
+    return sharedTranslator;
+}
+
+- (void)doSayWord:(NSString*)input {
+    (void)input;
+}
+
+- (void)doTranslateWord:(NSString*)input withCompletion:(void(^)(NSString *))completion {
+    (void)input;
+    if (completion) completion(nil);
+}
+
+- (void)doTranslateWord:(NSString*)input from:(NSString*)lang1 to:(NSString*)lang2 withCompletion:(void(^)(NSString *))completion {
+    (void)input; (void)lang1; (void)lang2;
+    if (completion) completion(nil);
+}
+
+- (void)doTranslateArray:(NSArray*)keysArray withCompletion:(void(^)(NSArray *))completion {
+    (void)keysArray;
+    if (completion) completion(@[]);
+}
+
+@end
+
+#else
+
 #import "MSTranslateAccessTokenRequester.h"
 #import "MSTranslateVendor.h"
 @import AVFoundation;
@@ -145,3 +181,5 @@
 
 
 @end
+
+#endif

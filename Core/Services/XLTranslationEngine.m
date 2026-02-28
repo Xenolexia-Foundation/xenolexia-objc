@@ -19,6 +19,7 @@
 @end
 
 @implementation XLTranslationEngine
+@synthesize options = _options, wordCache = _wordCache;
 
 - (instancetype)initWithOptions:(XLTranslationOptions *)options {
     self = [super init];
@@ -61,50 +62,50 @@
     // Select words to replace based on proficiency and density
     NSArray<NSString *> *wordsToReplace = [self selectWordsToReplace:words];
     
-    // Process replacements
+    // Process replacements sequentially (no libdispatch dependency for GNUStep/Linux)
     NSMutableString *processedContent = [content mutableCopy];
     NSMutableArray<XLForeignWordData *> *foreignWords = [NSMutableArray array];
     NSInteger offset = 0;
     
-    dispatch_group_t group = dispatch_group_create();
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    
-    NSEnumerator *wordEnumerator = [wordsToReplace objectEnumerator];
-    NSString *word;
-    while ((word = [wordEnumerator nextObject])) {
-        dispatch_group_enter(group);
-        
-        [self getTranslationForWord:word completion:^(XLWordEntry * _Nullable entry, NSError * _Nullable error) {
-            if (entry && !error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSRange range = [processedContent rangeOfString:word
-                                                            options:NSCaseInsensitiveSearch
-                                                              range:NSMakeRange(offset, processedContent.length - offset)];
-                    if (range.location != NSNotFound) {
-                        // Replace word
-                        [processedContent replaceCharactersInRange:range withString:entry.targetWord];
-                        
-                        // Create foreign word data
-                        XLForeignWordData *data = [XLForeignWordData dataWithOriginalWord:word
-                                                                              foreignWord:entry.targetWord
-                                                                               startIndex:range.location
-                                                                                 endIndex:range.location + entry.targetWord.length
-                                                                                wordEntry:entry];
-                        [foreignWords addObject:data];
-                        
-                        offset = range.location + entry.targetWord.length;
-                    }
-                });
-            }
-            dispatch_group_leave(group);
-        }];
+    if ([wordsToReplace count] == 0) {
+        if (completion) completion([processedContent copy], [foreignWords copy], nil);
+        return;
     }
     
-    dispatch_group_notify(group, queue, ^{
-        if (completion) {
-            completion([processedContent copy], [foreignWords copy], nil);
+    NSEnumerator *wordEnumerator = [wordsToReplace objectEnumerator];
+    __block NSMutableString *proc = processedContent;
+    __block NSMutableArray *fwords = foreignWords;
+    __block NSInteger off = offset;
+    
+    typedef void (^NextWordBlock)(void);
+    __block NextWordBlock nextBlock = nil;
+    nextBlock = ^{
+        NSString *word = [wordEnumerator nextObject];
+        if (!word) {
+            if (completion) completion([proc copy], [fwords copy], nil);
+            nextBlock = nil;
+            return;
         }
-    });
+        [self getTranslationForWord:word completion:^(XLWordEntry * _Nullable entry, NSError * _Nullable error) {
+            if (entry && !error) {
+                NSRange range = [proc rangeOfString:word
+                                            options:NSCaseInsensitiveSearch
+                                              range:NSMakeRange(off, proc.length - off)];
+                if (range.location != NSNotFound) {
+                    [proc replaceCharactersInRange:range withString:entry.targetWord];
+                    XLForeignWordData *data = [XLForeignWordData dataWithOriginalWord:word
+                                                                          foreignWord:entry.targetWord
+                                                                           startIndex:range.location
+                                                                             endIndex:range.location + entry.targetWord.length
+                                                                            wordEntry:entry];
+                    [fwords addObject:data];
+                    off = range.location + entry.targetWord.length;
+                }
+            }
+            if (nextBlock) nextBlock();
+        }];
+    };
+    nextBlock();
 }
 
 #pragma mark - Private Methods
@@ -196,7 +197,7 @@
         entry.proficiencyLevel = self.options.proficiencyLevel;
         
         // Cache it
-        self.wordCache[cacheKey] = entry;
+        [self.wordCache setObject:entry forKey:cacheKey];
         
         if (completion) completion(entry, nil);
     }];
@@ -205,6 +206,7 @@
 @end
 
 @implementation XLTranslationOptions
+@synthesize languagePair = _languagePair, proficiencyLevel = _proficiencyLevel, wordDensity = _wordDensity, excludeWords = _excludeWords;
 
 + (instancetype)optionsWithLanguagePair:(XLLanguagePair *)languagePair
                        proficiencyLevel:(XLProficiencyLevel)proficiencyLevel

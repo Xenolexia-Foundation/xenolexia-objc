@@ -11,6 +11,9 @@
 #import "../Models/Vocabulary.h"
 #import "../Models/Reader.h"
 
+@class XLBookParserService, XLTranslationEngine, XLTranslationService, XLStorageService, XLExportService;
+@class DictionaryService, DownloadService;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// Delegate protocol for XLManager (GNUStep compatible - no blocks)
@@ -32,7 +35,16 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /// Main manager for Xenolexia operations
-@interface XLManager : NSObject
+@interface XLManager : NSObject {
+@private
+    XLBookParserService *_bookParser;
+    XLTranslationEngine *_translationEngine;
+    XLTranslationService *_translationService;
+    XLStorageService *_storageService;
+    XLExportService *_exportService;
+    DictionaryService *_dictionaryService;
+    DownloadService *_downloadService;
+}
 
 + (instancetype)sharedManager;
 

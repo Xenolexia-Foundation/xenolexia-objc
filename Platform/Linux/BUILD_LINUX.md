@@ -6,6 +6,14 @@
 - **SmallStep** – built and installed into `xenolexia-objc/include` and `xenolexia-objc/lib` (run `./scripts/install-smallstep.sh` from xenolexia-objc root; requires SmallStep source, e.g. `../SmallStep`).
 - **libobjc2** (Objective-C 2.0 runtime with blocks) – required because the app uses Objective-C blocks and the system GNUStep headers expect `objc/blocks_runtime.h` when compiling with clang `-fblocks`.
 
+### Build dependencies (Debian/Ubuntu)
+
+Install development headers so the compiler can find `sqlite3.h`, `curl/curl.h`, and `zip.h`:
+
+```bash
+sudo apt install libsqlite3-dev libcurl4-openssl-dev libzip-dev
+```
+
 ## Option A: Install libobjc2 system-wide (recommended if you have sudo)
 
 ```bash

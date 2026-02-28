@@ -54,6 +54,7 @@ static NSData *readZipEntry(zip_t *z, const char *path) {
 }
 
 @implementation XLEpubReader
+@synthesize zip = _zip, rootPath = _rootPath, rootDir = _rootDir, title = _title, identifier = _identifier, language = _language, spinePaths = _spinePaths, tocEntries = _tocEntries, opfDoc = _opfDoc, opfXpath = _opfXpath;
 
 - (void)dealloc {
     if (_opfXpath) xmlXPathFreeContext(_opfXpath);

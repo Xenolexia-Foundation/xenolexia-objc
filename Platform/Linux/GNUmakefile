@@ -1,5 +1,5 @@
 # GNUmakefile for Xenolexia Linux App
-# SmallStep: build as library; run ./scripts/install-smallstep.sh, then headers in include/, lib in lib/.
+# SmallStep: use from ../../SmallStepProject/SmallStepLib (sibling of xenolexia-objc: ../SmallStepProject/SmallStepLib).
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
@@ -8,12 +8,13 @@ APP_NAME = Xenolexia
 # Use clang with blocks support (GCC does not support Objective-C blocks)
 # GNUStep rules.use $(CC) for .m files; override so ObjC compiles with clang.
 CC = clang
-ADDITIONAL_OBJCFLAGS = -fblocks
+ADDITIONAL_OBJCFLAGS = -fblocks -DXENOLEXIA_SIMPLE_CSV_EXPORT=1
 
-# SmallStep: headers and lib from xenolexia-objc/include and lib (absolute path for obj/ build)
+# SmallStep: from ../../SmallStepProject/SmallStepLib (sibling of Xenolexia repo: two levels up from xenolexia-objc).
 XENOLEXIA_OBJC_ROOT = $(shell cd ../.. && pwd)
-SMALLSTEP_INCLUDE = $(XENOLEXIA_OBJC_ROOT)/include
-SMALLSTEP_LIB = $(XENOLEXIA_OBJC_ROOT)/lib
+SMALLSTEP_ROOT = $(XENOLEXIA_OBJC_ROOT)/../../SmallStepProject/SmallStepLib
+SMALLSTEP_INCLUDE = $(SMALLSTEP_ROOT)/SmallStep/Core
+SMALLSTEP_LIB = $(SMALLSTEP_ROOT)
 # Optional: local libobjc2 for blocks runtime (run build-libobjc2-local.sh; then prefix in xenolexia-objc/local)
 LOCAL_OBJC2_PREFIX ?= $(XENOLEXIA_OBJC_ROOT)/local
 LOCAL_OBJC2_EXISTS = $(shell test -d $(LOCAL_OBJC2_PREFIX)/include/objc 2>/dev/null && echo 1)
@@ -49,7 +50,6 @@ Xenolexia_OBJC_FILES = \
 	../../Core/Services/XLStorageService.m \
 	../../Core/Services/XLStorageServiceBlockHelper.m \
 	../../Core/Services/XLExportService.m \
-	../../ThirdParty/chcsvparser/CHCSVParser/CHCSVParser/CHCSVParser.m \
 	../../ThirdParty/fmdb/src/fmdb/FMDatabase.m \
 	../../ThirdParty/fmdb/src/fmdb/FMResultSet.m \
 	../../ThirdParty/fmdb/src/fmdb/FMDatabaseAdditions.m \
@@ -70,6 +70,7 @@ Xenolexia_INCLUDE_DIRS = \
 	-I../../ThirdParty/chcsvparser/CHCSVParser/CHCSVParser \
 	-I/usr/include \
 	-I/usr/local/include \
+	-I/usr/include/x86_64-linux-gnu \
 	$(if $(LOCAL_OBJC2_EXISTS),-I$(LOCAL_OBJC2_PREFIX)/include,) \
 	-I/usr/include/libxml2
 
@@ -88,8 +89,10 @@ Xenolexia_HEADER_FILES = \
 # Resources (app_logo.png for About screen)
 Xenolexia_RESOURCE_FILES = ../../app_logo.png
 
-# Link against SmallStep (from xenolexia-objc/lib), SQLite, libxml2, zlib, libzip, libcurl (downloads)
-Xenolexia_LIBRARIES_DEPEND_UPON = -lSmallStep -lsqlite3 -lxml2 -lz -lzip -lcurl
+# Link against SmallStep (from SmallStepProject/SmallStepLib), SQLite, libxml2, zlib, libzip, libcurl (downloads)
+# Put SmallStep and system libs in Xenolexia_GUI_LIBS so they appear in ALL_LIBS after object files on the link line.
+Xenolexia_LIBRARIES_DEPEND_UPON = -lsqlite3 -lxml2 -lz -lzip -lcurl
+Xenolexia_GUI_LIBS = $(SMALLSTEP_LIB)/libSmallStep.a -lxml2 -lz -lzip -lcurl -lsqlite3
 ADDITIONAL_LDFLAGS = -L$(SMALLSTEP_LIB) -L/lib/x86_64-linux-gnu $(if $(LOCAL_OBJC2_EXISTS),-L$(LOCAL_OBJC2_PREFIX)/lib,)
 
 include $(GNUSTEP_MAKEFILES)/application.make

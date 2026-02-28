@@ -1,0 +1,19 @@
+# GNUStep / build artifacts
+*.m.o
+*.m.d
+obj/
+
+# Xcode / macOS
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+DerivedData/
+*.xccheckout
+*.moved-aside
+
+# Installed SmallStep (optional; if using install-smallstep.sh into include/ and lib/)
+# Uncomment if you want to ignore installed copy when using SmallStep from SmallStepProject
+# /include/SS*.h
+# /lib/libSmallStep.a

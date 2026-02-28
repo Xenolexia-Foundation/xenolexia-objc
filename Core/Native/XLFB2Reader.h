@@ -12,9 +12,22 @@
 
 #import <Foundation/Foundation.h>
 
+// Forward declarations for implementation ivars (no libxml in header)
+struct _xmlDoc;
+struct _xmlXPathContext;
+struct _xmlXPathObject;
+struct _xmlNodeSet;
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface XLFB2Reader : NSObject
+@interface XLFB2Reader : NSObject {
+@private
+    struct _xmlDoc *_doc;
+    struct _xmlXPathContext *_xpathCtx;
+    struct _xmlXPathObject *_sectionsXPathObj;
+    struct _xmlNodeSet *_sections;
+    NSInteger _sectionCount;
+}
 
 + (nullable instancetype)openAtPath:(NSString *)path error:(NSError **)error;
 

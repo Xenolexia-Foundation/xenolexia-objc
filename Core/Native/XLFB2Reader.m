@@ -69,6 +69,7 @@ static NSString *getSectionText(xmlNode *section) {
 }
 
 @implementation XLFB2Reader
+@synthesize doc = _doc, xpathCtx = _xpathCtx, sectionsXPathObj = _sectionsXPathObj, sections = _sections, sectionCount = _sectionCount;
 
 - (void)dealloc {
     if (_sectionsXPathObj) xmlXPathFreeObject(_sectionsXPathObj);

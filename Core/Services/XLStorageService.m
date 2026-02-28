@@ -414,6 +414,7 @@
         case XLBookFormatEpub: return @"epub";
         case XLBookFormatFb2: return @"fb2";
         case XLBookFormatMobi: return @"mobi";
+        case XLBookFormatPdf: return @"pdf";
         case XLBookFormatTxt: return @"txt";
     }
     return @"epub";
@@ -423,6 +424,7 @@
     NSString *lower = [s lowercaseString];
     if ([lower isEqualToString:@"fb2"]) return XLBookFormatFb2;
     if ([lower isEqualToString:@"mobi"]) return XLBookFormatMobi;
+    if ([lower isEqualToString:@"pdf"]) return XLBookFormatPdf;
     if ([lower isEqualToString:@"txt"]) return XLBookFormatTxt;
     return XLBookFormatEpub;
 }
@@ -791,9 +793,10 @@
     if ([sortedDates count] > 0) {
         NSDate *mostRecent = [sortedDates lastObject];
         NSDate *d = mostRecent;
+        NSTimeInterval oneDay = 24 * 60 * 60;
         while ([dateSet containsObject:d]) {
             currentStreak++;
-            d = [cal dateByAddingUnit:NSCalendarUnitDay value:-1 toDate:d options:0];
+            d = [d dateByAddingTimeInterval:-oneDay];
         }
     }
 
@@ -851,7 +854,8 @@
     [dayFmt setDateFormat:@"EEE d"];
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:(NSUInteger)lastDays];
     for (NSInteger i = lastDays - 1; i >= 0; i--) {
-        NSDate *day = [cal dateByAddingUnit:NSCalendarUnitDay value:-i toDate:[NSDate date] options:0];
+        NSTimeInterval interval = -(i * 24 * 3600);
+        NSDate *day = [[NSDate date] dateByAddingTimeInterval:interval];
         NSDateComponents *comp = [cal components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:day];
         NSDate *dayStart = [cal dateFromComponents:comp];
         NSString *dateStr = [NSString stringWithFormat:@"%04ld-%02ld-%02ld", (long)[comp year], (long)[comp month], (long)[comp day]];

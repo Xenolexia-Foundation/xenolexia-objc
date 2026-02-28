@@ -12,6 +12,8 @@
 #import <Foundation/Foundation.h>
 #import "../Models/Vocabulary.h"
 
+@class SSFileSystem;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// Export formats
@@ -22,7 +24,10 @@ typedef NS_ENUM(NSInteger, XLExportFormat) {
 };
 
 /// Export service
-@interface XLExportService : NSObject
+@interface XLExportService : NSObject {
+@private
+    SSFileSystem *_fileSystem;
+}
 
 /// Export vocabulary items to a file
 - (void)exportVocabularyItems:(NSArray *)items
