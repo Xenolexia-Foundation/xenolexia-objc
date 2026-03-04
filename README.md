@@ -162,7 +162,7 @@ make -f GNUmakefile
 
 - **Foundation** - Core Objective-C runtime
 - **SQLite3** - Database storage
-- **[SmallStepLib](https://github.com/Xenolexia-Foundation/SmallStepLib)** - Abstracts the platform differences between AppKit, UIKit and GNUStep
+- **[SmallStepLib](https://github.com/SmallStep-Foundation/SmallStepLib)** - Abstracts the platform differences between AppKit, UIKit and GNUStep
 
 ## Architecture
 
